@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>GGA Blackjack</title>
-  <link rel="stylesheet" href="/css/style.css" /> <!-- fixed filename from styles.css to style.css -->
+  <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
   <!-- Login Section -->
@@ -30,29 +30,29 @@
     <button id="close-result">Close</button>
   </div>
 
-  <!-- Game Table -->
-  <div class="game-table">
-    <div class="cards-section">
+  <!-- Game Area -->
+  <main class="game-area">
+    <section class="cards-section">
       <h2>Dealer</h2>
       <div id="dealer-cards" class="cards"></div>
-      <div id="dealer-total"></div>
-    </div>
+      <div id="dealer-total" class="total-display"></div>
+    </section>
 
-    <div class="cards-section">
+    <section class="cards-section">
       <h2>You</h2>
       <div id="player-cards" class="cards"></div>
-      <div id="player-total"></div>
-    </div>
+      <div id="player-total" class="total-display"></div>
+    </section>
 
     <!-- Controls -->
-    <div id="controls" class="controls">
+    <section id="controls" class="controls">
       <button id="hit-btn">Hit</button>
       <button id="stand-btn">Stand</button>
       <button id="double-btn">Double</button>
-    </div>
+    </section>
 
-    <div id="message" class="message"></div>
-  </div>
+    <div id="message" class="message">21 PAYS 3 TO 2</div>
+  </main>
 
   <script src="/js/game.js"></script>
 </body>
