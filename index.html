@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rickyy's Blackjack</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo">
+            <img src="https://cdn.discordapp.com/avatars/367542459645034516/70cd46f913422a9daf241e5d4ef7d716.png?size=1024" alt="Logo">
+        </div>
+        <div class="game-title">Rickyy's Blackjack</div>
+    </div>
+    
+    <div class="game-container">
+        <div class="game-area">
+            <div class="dealer-area">
+                <div class="area-title">Rickyy (Dealer)</div>
+                <div class="cards-container" id="dealer-cards"></div>
+                <div class="total-display" id="dealer-total"></div>
+            </div>
+            
+            <div class="message-area" id="message">21 PAYS 3 TO 2</div>
+            
+            <div class="player-area">
+                <div class="area-title">Player</div>
+                <div class="cards-container" id="player-cards"></div>
+                <div class="total-display" id="player-total"></div>
+            </div>
+        </div>
+        
+        <div class="controls" id="controls">
+            <button id="hit-btn" disabled>HIT</button>
+            <button id="stand-btn" disabled>STAND</button>
+            <button id="play-btn" class="play-button">PLAY</button>
+        </div>
+    </div>
+    
+    <div class="overlay" id="welcome-overlay"></div>
+    <div class="welcome-popup" id="welcome-popup">
+        <h1>Welcome to Rickyy's Blackjack</h1>
+        <p>Credits to @rick_478</p>
+        <div class="popup-buttons">
+            <button id="close-welcome">Close</button>
+        </div>
+    </div>
+    
+    <div class="overlay" id="result-overlay"></div>
+    <div class="result-popup" id="result-popup">
+        <h1 id="result-title"></h1>
+        <p id="result-subtitle"></p>
+        <div class="popup-buttons">
+            <button id="close-result">Close</button>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>
