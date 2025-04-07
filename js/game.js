@@ -36,28 +36,28 @@ function initGame() {
     welcomePopup.style.display = 'block';
     welcomeOverlay.style.display = 'block';
 
-    closeWelcome.addEventListener('click', () => {
+    closeWelcome.onclick = () => {
         welcomePopup.style.display = 'none';
         welcomeOverlay.style.display = 'none';
-    });
+    };
 
-    closeResult.addEventListener('click', () => {
+    closeResult.onclick = () => {
         resultPopup.style.display = 'none';
         resultOverlay.style.display = 'none';
-    });
+    };
 
-    loginBtn.addEventListener('click', () => {
+    loginBtn.onclick = () => {
         const clientId = "1358833653676773416";
         const redirectUri = encodeURIComponent("https://ggaaffblackjack.vercel.app/api/auth/discord");
         const scope = "identify";
         const discordOAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
         window.location.href = discordOAuthUrl;
-    });
+    };
 
-    playBtn.addEventListener('click', startGame);
-    hitBtn.addEventListener('click', hit);
-    standBtn.addEventListener('click', stand);
-    doubleBtn.addEventListener('click', double);
+    playBtn.onclick = startGame;
+    hitBtn.onclick = hit;
+    standBtn.onclick = stand;
+    doubleBtn.onclick = double;
 
     disableControls();
     checkLogin();
@@ -76,7 +76,7 @@ function enableControls() {
     hitBtn.disabled = false;
     standBtn.disabled = false;
     doubleBtn.disabled = false;
-    playBtn.disabled = false;
+    playBtn.disabled = true;
 }
 
 async function checkLogin() {
@@ -87,12 +87,10 @@ async function checkLogin() {
         user = await res.json();
         userInfo.textContent = `Logged in as ${user.username}#${user.discriminator}`;
         loginBtn.style.display = "none";
-        playBtn.disabled = false;   // ✅ Enable play button
+        playBtn.disabled = false;
     } catch {
-        user = null;
         userInfo.textContent = "You must log in with Discord to play.";
-        loginBtn.style.display = "inline-block";
-        playBtn.disabled = true;    // ✅ Disable play button
+        playBtn.disabled = true;
     }
 }
 
@@ -136,11 +134,7 @@ async function startGame() {
     dealerTotalEl.textContent = '';
     playerTotalEl.textContent = '';
 
-    hitBtn.disabled = false;
-    standBtn.disabled = false;
-    doubleBtn.disabled = false;
-    playBtn.disabled = true;
-
+    enableControls();
     messageEl.textContent = "21 PAYS 3 TO 2";
 
     await dealInitialCards();
@@ -154,20 +148,20 @@ async function dealInitialCards() {
     isAnimating = true;
 
     playerCards.push(drawCard());
-    renderCards(false, 'player');
-    await sleep(500);
+    renderCards();
+    await sleep(400);
 
     dealerCards.push(drawCard());
-    renderCards(false, 'dealer');
-    await sleep(500);
+    renderCards();
+    await sleep(400);
 
     playerCards.push(drawCard());
-    renderCards(false, 'player');
-    await sleep(500);
+    renderCards();
+    await sleep(400);
 
     dealerCards.push(drawCard());
-    renderCards(false, 'dealer');
-    await sleep(500);
+    renderCards();
+    await sleep(400);
 
     updateTotals();
     isAnimating = false;
@@ -187,8 +181,8 @@ function calculateTotal(cards) {
 
     for (let card of cards) {
         if (card.value === 'A') {
-            aces++;
             total += 11;
+            aces++;
         } else if (['K', 'Q', 'J'].includes(card.value)) {
             total += 10;
         } else {
@@ -204,76 +198,63 @@ function calculateTotal(cards) {
     return total;
 }
 
-function renderCards(updateAll = false, animateTarget = null) {
-    if (updateAll) {
-        dealerCardsEl.innerHTML = '';
-        playerCardsEl.innerHTML = '';
-    }
+function renderCards() {
+    dealerCardsEl.innerHTML = '';
+    playerCardsEl.innerHTML = '';
 
-    dealerCards.forEach((card, index) => {
-        if (!updateAll && dealerCardsEl.children.length > index) return;
-        if (index === 0 && !gameOver) {
-            const cardEl = document.createElement('div');
-            cardEl.className = 'card hidden-card';
-            dealerCardsEl.appendChild(cardEl);
+    dealerCards.forEach((card, i) => {
+        const cardEl = document.createElement('div');
+        cardEl.className = 'card';
+
+        if (i === 0 && !gameOver) {
+            cardEl.classList.add('hidden-card');
         } else {
-            const cardEl = createCardElement(card.value, card.suit);
-            if (animateTarget === 'dealer' && index === dealerCards.length - 1) {
-                cardEl.classList.add('dealing');
+            if (card.suit === '♥' || card.suit === '♦') {
+                cardEl.classList.add('red');
             }
-            dealerCardsEl.appendChild(cardEl);
+
+            cardEl.innerHTML = `
+                <div class="card-top">${card.value}</div>
+                <div class="card-value">${card.suit}</div>
+                <div class="card-bottom">${card.value}</div>
+            `;
         }
+
+        dealerCardsEl.appendChild(cardEl);
     });
 
-    playerCards.forEach((card, index) => {
-        if (!updateAll && playerCardsEl.children.length > index) return;
-        const cardEl = createCardElement(card.value, card.suit);
-        if (animateTarget === 'player' && index === playerCards.length - 1) {
-            cardEl.classList.add('dealing');
+    playerCards.forEach(card => {
+        const cardEl = document.createElement('div');
+        cardEl.className = 'card';
+
+        if (card.suit === '♥' || card.suit === '♦') {
+            cardEl.classList.add('red');
         }
+
+        cardEl.innerHTML = `
+            <div class="card-top">${card.value}</div>
+            <div class="card-value">${card.suit}</div>
+            <div class="card-bottom">${card.value}</div>
+        `;
+
         playerCardsEl.appendChild(cardEl);
     });
 }
 
-function createCardElement(value, suit) {
-    const cardEl = document.createElement('div');
-    cardEl.className = 'card';
-
-    if (suit === '♥' || suit === '♦') {
-        cardEl.classList.add('red');
-    }
-
-    cardEl.innerHTML = `
-        <div class="card-top">${value}</div>
-        <div class="card-value">${suit}</div>
-        <div class="card-bottom">${value}</div>
-    `;
-
-    return cardEl;
-}
-
 function updateTotals() {
-    const dealerTotal = calculateTotal(dealerCards);
     const playerTotal = calculateTotal(playerCards);
+    const dealerTotal = calculateTotal(dealerCards);
+
+    playerTotalEl.textContent = playerTotal > 21
+        ? "BUST"
+        : (playerTotal === 21 && playerCards.length === 2) ? "BJ" : playerTotal;
 
     if (gameOver) {
-        if (dealerTotal > 21) {
-            dealerTotalEl.innerHTML = `<span class="bust">BUST</span>`;
-        } else if (dealerTotal === 21 && dealerCards.length === 2) {
-            dealerTotalEl.innerHTML = `<span class="blackjack">BJ</span>`;
-        } else {
-            dealerTotalEl.textContent = dealerTotal;
-        }
+        dealerTotalEl.textContent = dealerTotal > 21
+            ? "BUST"
+            : (dealerTotal === 21 && dealerCards.length === 2) ? "BJ" : dealerTotal;
     } else {
-        dealerTotalEl.textContent = '';
-    }
-
-    if (playerTotal > 21) {
-        playerTotalEl.innerHTML = `<span class="bust">BUST</span>`;
-    } else if (playerTotal === 21 && playerCards.length === 2) {
-        playerTotalEl.innerHTML = `<span class="blackjack">BJ</span>`;
-    } else {
-        playerTotalEl.textContent = playerTotal;
+        dealerTotalEl.textContent = "";
     }
 
     return playerTotal;
@@ -284,12 +265,12 @@ async function hit() {
 
     isAnimating = true;
     playerCards.push(drawCard());
-    renderCards(false, 'player');
-    const playerTotal = updateTotals();
+    renderCards();
+    const total = updateTotals();
 
-    if (playerTotal >= 21) {
+    if (total >= 21) {
         await sleep(500);
-        if (playerTotal === 21) {
+        if (total === 21) {
             await stand();
         } else {
             endGame(false);
@@ -304,9 +285,8 @@ async function stand() {
 
     gameOver = true;
     isAnimating = true;
-    messageEl.textContent = "Rickyy is playing...";
 
-    renderCards(true);
+    renderCards(); // show dealer's hidden card
     updateTotals();
     await sleep(1000);
 
@@ -315,12 +295,11 @@ async function stand() {
 }
 
 async function double() {
-    if (gameOver || isAnimating) return;
-    if (playerCards.length !== 2) return;
+    if (gameOver || isAnimating || playerCards.length !== 2) return;
 
     isAnimating = true;
     playerCards.push(drawCard());
-    renderCards(false, 'player');
+    renderCards();
     updateTotals();
     await sleep(500);
     await stand();
@@ -332,10 +311,10 @@ async function dealerPlay() {
 
     while (dealerTotal < 17) {
         dealerCards.push(drawCard());
-        renderCards(false, 'dealer');
+        renderCards();
         dealerTotal = calculateTotal(dealerCards);
         updateTotals();
-        await sleep(1000);
+        await sleep(800);
     }
 
     await sleep(500);
@@ -350,17 +329,13 @@ function determineWinner() {
 
     if (playerTotal > 21) {
         playerWins = false;
-    } else if (dealerTotal > 21) {
-        playerWins = true;
-    } else if (playerTotal > dealerTotal) {
+    } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
         playerWins = true;
     } else if (playerTotal === dealerTotal) {
         messageEl.textContent = "PUSH";
         showResult("Push!", "It's a tie!");
         playBtn.disabled = false;
         return;
-    } else {
-        playerWins = false;
     }
 
     endGame(playerWins);
@@ -368,11 +343,8 @@ function determineWinner() {
 
 function endGame(playerWins) {
     gameOver = true;
-    hitBtn.disabled = true;
-    standBtn.disabled = true;
-    doubleBtn.disabled = true;
+    disableControls();
     playBtn.disabled = false;
-
     updateTotals();
 
     if (playerWins) {

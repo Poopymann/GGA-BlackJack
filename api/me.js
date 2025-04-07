@@ -19,6 +19,6 @@ export default async function handler(req, res) {
     const user = await discordRes.json();
     return res.status(200).json(user);
   } catch (err) {
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", details: err.message });
   }
 }

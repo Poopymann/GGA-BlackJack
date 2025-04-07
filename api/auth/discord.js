@@ -29,20 +29,13 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Failed to get access token.', details: tokenData });
     }
 
-    // Step 2: Use token to get user info
-    const userRes = await fetch('https://discord.com/api/users/@me', {
-      headers: {
-        Authorization: `Bearer ${tokenData.access_token}`,
-      },
-    });
+    // Step 2: Set the token as a cookie (for use in /api/me.js)
+    res.setHeader('Set-Cookie', `discord_token=${tokenData.access_token}; Path=/; HttpOnly; Max-Age=86400; Secure; SameSite=None`);
 
-    const userData = await userRes.json();
-
-    // Step 3: Set a cookie and redirect back to the site
-    res.setHeader('Set-Cookie', `user=${encodeURIComponent(JSON.stringify(userData))}; Path=/; HttpOnly; Max-Age=86400`);
+    // Step 3: Redirect back to site
     res.redirect('/');
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Something went wrong.', details: err });
+    res.status(500).json({ error: 'Something went wrong.', details: err.message });
   }
 }
