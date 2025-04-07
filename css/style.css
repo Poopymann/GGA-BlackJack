@@ -1,0 +1,162 @@
+/* Base Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: url('/assets/felt-bg.jpg') repeat;
+  color: white;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Card Sections */
+.cards-section {
+  margin: 1em 0;
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.card {
+  width: 80px;
+  height: 120px;
+  background: linear-gradient(to bottom right, #ffffff, #f0f0f0);
+  color: black;
+  border-radius: 10px;
+  border: 2px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.5em;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+  transition: transform 0.4s ease;
+  position: relative;
+}
+
+.card.red {
+  color: red;
+}
+
+.card .card-top,
+.card .card-bottom {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.card .card-value {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0 auto;
+}
+
+.card.hidden-card {
+  background: url('/assets/card-back.png') center/cover no-repeat;
+  border: none;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+/* Game Controls */
+.controls {
+  margin-top: 1.5em;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+.controls button {
+  padding: 0.7em 1.2em;
+  background: #0b6e4f;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.controls button:hover {
+  background: #0d875c;
+}
+
+/* Popups & Overlays */
+.popup,
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup {
+  background: #2d2d2d;
+  padding: 2em;
+  border-radius: 10px;
+  z-index: 10;
+  color: white;
+  max-width: 90%;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+}
+
+.overlay {
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 5;
+}
+
+/* In-Game Message */
+.message {
+  margin-top: 1em;
+  font-size: 1.4em;
+  color: #ffd700;
+  font-weight: bold;
+}
+
+/* Gamba Coin Balance Bar */
+#gamba-bar {
+  margin: 1em auto;
+  width: 80%;
+  max-width: 500px;
+  height: 20px;
+  border-radius: 10px;
+  background: #333;
+  overflow: hidden;
+  border: 2px solid #888;
+}
+
+#gamba-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00ff00, #32cd32);
+  width: 0%;
+  transition: width 0.5s ease-in-out;
+}
+
+/* Responsive Enhancements */
+@media (max-width: 600px) {
+  .card {
+    width: 60px;
+    height: 90px;
+  }
+
+  .card .card-value {
+    font-size: 1.5em;
+  }
+
+  .controls button {
+    font-size: 0.9em;
+    padding: 0.6em 1em;
+  }
+
+  .message {
+    font-size: 1.2em;
+  }
+}

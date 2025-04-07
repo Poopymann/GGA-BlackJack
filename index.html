@@ -18,8 +18,10 @@
   <div id="welcome-popup" class="popup">
     <h1>Welcome to GGA Blackjack</h1>
     <span id="user-info"></span>
-    <button id="play-btn">Play</button>
-    <button id="close-welcome">Close</button>
+    <div style="margin-top: 1em;">
+      <button id="play-btn">Play</button>
+      <button id="close-welcome">Close</button>
+    </div>
   </div>
 
   <!-- Result Popup -->
@@ -32,12 +34,20 @@
 
   <!-- Game Area -->
   <main class="game-area">
+
+    <!-- Gamba Coin Balance Bar -->
+    <div id="gamba-bar">
+      <div id="gamba-fill"></div>
+    </div>
+
+    <!-- Dealer Cards -->
     <section class="cards-section">
       <h2>Dealer</h2>
       <div id="dealer-cards" class="cards"></div>
       <div id="dealer-total" class="total-display"></div>
     </section>
 
+    <!-- Player Cards -->
     <section class="cards-section">
       <h2>You</h2>
       <div id="player-cards" class="cards"></div>
@@ -51,9 +61,11 @@
       <button id="double-btn">Double</button>
     </section>
 
+    <!-- Blackjack Message -->
     <div id="message" class="message">21 PAYS 3 TO 2</div>
   </main>
 
+  <!-- Game Logic -->
   <script src="/js/game.js"></script>
 </body>
 </html>
