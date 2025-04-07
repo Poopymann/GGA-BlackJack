@@ -1,14 +1,14 @@
 export default async function handler(req, res) {
-  const access_token = req.cookies['discord_token'];
+  const token = req.cookies['discord_token'];
 
-  if (!access_token) {
+  if (!token) {
     return res.status(401).json({ error: "Not logged in" });
   }
 
   try {
     const discordRes = await fetch("https://discord.com/api/users/@me", {
       headers: {
-        Authorization: `Bearer ${access_token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -17,8 +17,8 @@ export default async function handler(req, res) {
     }
 
     const user = await discordRes.json();
-    res.status(200).json(user);
+    return res.status(200).json(user);
   } catch (err) {
-    res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 }

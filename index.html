@@ -8,17 +8,17 @@
 </head>
 <body>
   <!-- Login Section -->
-  <div id="login-container" style="text-align: center; margin-top: 2rem;">
+  <div id="login-container" class="login-container">
     <button id="login-btn">Login with Discord</button>
-    <p id="login-status" style="margin-top: 0.5rem; font-weight: bold;"></p>
+    <p id="login-status"></p>
   </div>
 
   <!-- Welcome Popup -->
   <div id="welcome-overlay" class="overlay"></div>
   <div id="welcome-popup" class="popup">
     <h1>Welcome to GGA Blackjack</h1>
-    <button id="play-btn">Play</button>
     <span id="user-info"></span>
+    <button id="play-btn">Play</button>
     <button id="close-welcome">Close</button>
   </div>
 
@@ -45,7 +45,7 @@
     </div>
 
     <!-- Controls -->
-    <div id="controls" class="controls" style="display: none;">
+    <div id="controls" class="controls">
       <button id="hit-btn">Hit</button>
       <button id="stand-btn">Stand</button>
       <button id="double-btn">Double</button>

@@ -87,10 +87,12 @@ async function checkLogin() {
         user = await res.json();
         userInfo.textContent = `Logged in as ${user.username}#${user.discriminator}`;
         loginBtn.style.display = "none";
-        playBtn.disabled = false;
+        playBtn.disabled = false;   // ✅ Enable play button
     } catch {
+        user = null;
         userInfo.textContent = "You must log in with Discord to play.";
-        playBtn.disabled = true;
+        loginBtn.style.display = "inline-block";
+        playBtn.disabled = true;    // ✅ Disable play button
     }
 }
 
