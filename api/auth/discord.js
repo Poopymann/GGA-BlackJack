@@ -1,29 +1,35 @@
 export default async function handler(req, res) {
-  const code = req.query.code;
+  const { code } = req.query;
 
   if (!code) {
-    return res.status(400).json({ error: 'Missing code in request' });
+    return res.status(400).send('No code provided.');
   }
 
   const params = new URLSearchParams();
-  params.append('client_id', '1358833653676773416');
-  params.append('client_secret', 'eWL54Xmp7m4mT7JNRxiqi1UEkfX4Bq02');
+  params.append('client_id', process.env.DISCORD_CLIENT_ID);
+  params.append('client_secret', process.env.DISCORD_CLIENT_SECRET);
   params.append('grant_type', 'authorization_code');
   params.append('code', code);
-  params.append('redirect_uri', 'https://ggaaffblackjack.vercel.app/auth/discord');
+  params.append('redirect_uri', process.env.DISCORD_REDIRECT_URI);
   params.append('scope', 'identify');
 
   try {
+    // Step 1: Exchange code for access token
     const tokenRes = await fetch('https://discord.com/api/oauth2/token', {
       method: 'POST',
+      body: params,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: params,
     });
 
     const tokenData = await tokenRes.json();
 
+    if (!tokenData.access_token) {
+      return res.status(400).json({ error: 'Failed to get access token.', details: tokenData });
+    }
+
+    // Step 2: Use token to get user info
     const userRes = await fetch('https://discord.com/api/users/@me', {
       headers: {
         Authorization: `Bearer ${tokenData.access_token}`,
@@ -32,8 +38,11 @@ export default async function handler(req, res) {
 
     const userData = await userRes.json();
 
-    return res.status(200).json(userData);
-  } catch (error) {
-    return res.status(500).json({ error: 'OAuth2 error', details: error.message });
+    // Step 3: Set a cookie and redirect back to the site
+    res.setHeader('Set-Cookie', `user=${encodeURIComponent(JSON.stringify(userData))}; Path=/; HttpOnly; Max-Age=86400`);
+    res.redirect('/');
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Something went wrong.', details: err });
   }
 }
